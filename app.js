@@ -170,5 +170,5 @@ app.use((err, req, res, next) => {
 const port = process.env.Port || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
-})
+});
 
