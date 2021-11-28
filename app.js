@@ -25,7 +25,7 @@ const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const MongoStore = require('connect-mongo');
 
-const dbUrl=process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 // const dbUrl = 'mongodb://localhost:27017/yelp-camp'
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -63,11 +63,13 @@ app.use(mongoSanitize({
 //     console.log('Session Store Error', e);
 
 // })
-const secret=process.env.SECRET ||'thisshouldbeabettersecret!';
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 const sessionConfig = {
-    store: MongoStore.create({ mongoUrl: dbUrl,
-        secret, 
-        touchAfter: 24 * 60 * 60, }), 
+    store: MongoStore.create({
+        mongoUrl: dbUrl,
+        secret,
+        touchAfter: 24 * 60 * 60,
+    }),
     name: 'session',
     secret,
     resave: false,
@@ -165,7 +167,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
+const port = process.env.Port || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
 
