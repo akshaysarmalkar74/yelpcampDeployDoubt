@@ -1,7 +1,8 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
-// mongodb+srv://our-first-user:<password>@cluster0.ygik3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+
+// mongodb+srv://first-user:<password>@cluster0.38hzm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
 const express = require('express');
 const path = require('path');
@@ -18,8 +19,6 @@ const helmet = require('helmet');
 
 const mongoSanitize = require('express-mongo-sanitize');
 
-
-
 const userRoutes = require('./routes/user');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
@@ -27,6 +26,7 @@ const MongoStore = require('connect-mongo');
 
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 // const dbUrl = 'mongodb://localhost:27017/yelp-camp'
+// const dbUrl = process.env.dbUrl;
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     // useCreateIndex: true,
@@ -53,16 +53,6 @@ app.use(mongoSanitize({
     replaceWith: '_'
 }))
 
-// const store = new MongoDBStore({
-//     url: dbUrl,
-//     secret: 'thisshouldbeabettersecret!',
-//     touchAfter: 24 * 60 * 60,
-// });
-
-// store.on("error", function (e) {
-//     console.log('Session Store Error', e);
-
-// })
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 const sessionConfig = {
     store: MongoStore.create({
@@ -166,9 +156,9 @@ app.use((err, req, res, next) => {
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { err })
 })
-const host = '0.0.0.0';
+
 const port = process.env.PORT || 3000;
-app.listen(port, host, () => {
+app.listen(port, () => {
     console.log(`Serving on port ${port}`)
-});
+})
 
