@@ -2,8 +2,6 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
-// mongodb+srv://first-user:<password>@cluster0.38hzm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -16,17 +14,15 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const helmet = require('helmet');
-
 const mongoSanitize = require('express-mongo-sanitize');
-
 const userRoutes = require('./routes/user');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
-const MongoStore = require('connect-mongo');
+
+const MongoStore = require("connect-mongo");
 
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
-// const dbUrl = 'mongodb://localhost:27017/yelp-camp'
-// const dbUrl = process.env.dbUrl;
+
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     // useCreateIndex: true,
@@ -52,14 +48,19 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize({
     replaceWith: '_'
 }))
-
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    secret
+});
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
 const sessionConfig = {
-    store: MongoStore.create({
-        mongoUrl: dbUrl,
-        secret,
-        touchAfter: 24 * 60 * 60,
-    }),
+    store,
     name: 'session',
     secret,
     resave: false,
@@ -83,7 +84,7 @@ const scriptSrcUrls = [
     "https://api.mapbox.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
-
+    "https://cdn.jsdelivr.net",
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
