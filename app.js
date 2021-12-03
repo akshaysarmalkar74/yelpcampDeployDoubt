@@ -54,7 +54,7 @@ const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     secret
-});
+})
 store.on("error", function (e) {
     console.log("SESSION STORE ERROR", e)
 })
@@ -159,6 +159,7 @@ app.use((err, req, res, next) => {
 })
 
 const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
 })
